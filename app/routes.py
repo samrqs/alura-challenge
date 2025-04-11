@@ -56,8 +56,8 @@ def classifier():
     }), 201
 
 
-@main_bp.route("/relatorio", methods=["GET"])
-def relatorio():
+@main_bp.route("/report", methods=["GET"])
+def report():
      
     feedbacks = Feedback.query.all()
 
@@ -93,5 +93,5 @@ def relatorio():
     positives_percent = round((positives / total_feedbacks) * 100, 2) if total_feedbacks else 0
     most_mentioned = Counter(all_codes).most_common(5)  # top 5 features
 
-    return render_template("relatorio.html", feedbacks=data,
+    return render_template("report.html", feedbacks=data,
         positives_percent=positives_percent, most_mentioned=most_mentioned)
