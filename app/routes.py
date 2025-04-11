@@ -1,5 +1,7 @@
 import json
 
+from flask import render_template
+from collections import Counter
 from app.models import Feedback, Classification
 from .extensions import db
 
@@ -52,3 +54,44 @@ def classifier():
             } 
         ]
     }), 201
+
+
+@main_bp.route("/relatorio", methods=["GET"])
+def relatorio():
+     
+    feedbacks = Feedback.query.all()
+
+    data = []
+
+    total_feedbacks = len(feedbacks)
+
+    positives = 0
+    all_codes = []
+
+    for feedback in feedbacks:
+        classification = Classification.query.filter_by(feedbacks_id=feedback.id).all()
+
+        sentiments = set(cls.sentiment for cls in classification)
+
+        if 'POSITIVO' in sentiments:
+            positives += 1
+
+        for cls in classification:
+            all_codes.append(cls.code)
+
+        data.append({
+            "feedback": feedback.feedback_text,
+            "classificacoes": [
+                {
+                    "sentiment": cls.sentiment,
+                    "code": cls.code,
+                    "reason": cls.reason
+                } for cls in classification
+            ]
+        })
+
+    positives_percent = round((positives / total_feedbacks) * 100, 2) if total_feedbacks else 0
+    most_mentioned = Counter(all_codes).most_common(5)  # top 5 features
+
+    return render_template("relatorio.html", feedbacks=data,
+        positives_percent=positives_percent, most_mentioned=most_mentioned)

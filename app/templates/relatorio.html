@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Relatório de Feedbacks</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <h1 class="mb-4 text-center">Relatório de Feedbacks</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Feedbacks Positivos</h5>
+                    <p class="card-text">
+                        <strong>{{ positives_percent }}%</strong> dos feedbacks são positivos.
+                    </p>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar"
+                             style="width: {{ positives_percent }}%;" aria-valuenow="{{ positives_percent }}"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Top Features mais mencionadas</h5>
+                    {% if most_mentioned %}
+                    <ul class="list-group list-group-flush">
+                        {% for code, count in most_mentioned %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ code }}
+                            <span class="badge bg-primary rounded-pill">{{ count }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted">Nenhuma feature mencionada ainda.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Todos os Feedbacks</h5>
+            {% if feedbacks %}
+            {% for fb in feedbacks %}
+            <div class="mb-4 border-bottom pb-3">
+                <p class="mb-1"><strong>Feedback:</strong> {{ fb.feedback }}</p>
+                {% for cls in fb.classificacoes %}
+                <div class="ps-3">
+                    <p class="mb-0"><strong>Sentimento:</strong> {{ cls.sentiment }}</p>
+                    <p class="mb-0"><strong>Feature:</strong> {{ cls.code }}</p>
+                    <p class="mb-0"><strong>Motivo:</strong> {{ cls.reason }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="text-muted">Nenhum feedback disponível.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
