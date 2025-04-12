@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resumo Semanal de Feedbacks</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #2c3e50; }
+        .resumo { background-color: #f2f2f2; padding: 20px; border-radius: 10px; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin-bottom: 10px; }
+        .percentuais { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Resumo Semanal de Feedbacks</h1>
+    <div class="resumo">
+        <p><strong>Total de feedbacks:</strong> {{ total }}</p>
+        <div class="percentuais">
+            <p><strong>Positivos:</strong> {{ positivos }}%</p>
+            <p><strong>Negativos:</strong> {{ negativos }}%</p>
+        </div>
+        <h2>Resumo geral:</h2>
+        <p>{{ resumo }}</p>
+        <h2>Funcionalidades mais sugeridas:</h2>
+        <ul>
+            {% for code, reasons in funcionalidades.items() %}
+                <li>
+                    <strong>{{ code }}</strong>
+                    <ul>
+                        {% for reason in reasons[:3] %}
+                            <li>{{ reason }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

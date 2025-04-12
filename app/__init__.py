@@ -1,10 +1,12 @@
 from flask import Flask
-from flask_migrate import Migrate
-from .extensions import db
+
+from .extensions import db,mail,migrate,scheduler
 from .routes import main_bp
+from app.email import send_email
 
-migrate = Migrate()
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def create_app():
     app = Flask(__name__, template_folder="templates")
@@ -12,12 +14,15 @@ def create_app():
     
     db.init_app(app)
     migrate.init_app(app, db)
+    mail.init_app(app)
+    scheduler.init_app(app)
 
-    from .models import Feedback, Classification
+    app.register_blueprint(main_bp)
 
     with app.app_context():
         db.create_all()
 
-    app.register_blueprint(main_bp)
-    
+    scheduler.add_job(func=send_email, trigger='interval', days=7, id='weekly_email', name='Enviar resumo semanal', replace_existing=True)
+    scheduler.start()
+
     return app

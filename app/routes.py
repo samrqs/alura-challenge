@@ -7,7 +7,9 @@ from .extensions import db
 
 from flask import Blueprint
 from flask import request, jsonify
-from classifier import sentiment_classifier
+from app.classifier import sentiment_classifier
+from app.metrics import feedbacks_week, generate_summary
+from app.email import send_email
 
 main_bp = Blueprint("main", __name__)
 
@@ -95,3 +97,28 @@ def report():
 
     return render_template("report.html", feedbacks=data,
         positives_percent=positives_percent, most_mentioned=most_mentioned)
+
+
+@main_bp.route("/weekly-summary", methods=["GET"])
+def weekly_summary():
+
+    data = feedbacks_week()
+
+    if data["total_feedbacks"] == 0:
+        return "<h3>Nenhum feedback recebido na última semana.</h3>"
+
+    summary = generate_summary(data)
+
+    return render_template(
+        "summary.html",
+        total=data["total_feedbacks"],
+        positivos=data["porcentagem_positivos"],
+        negativos=data["porcentagem_negativos"],
+        funcionalidades=data["funcionalidades"],
+        resumo=summary
+    )
+
+@main_bp.route('/test-email')
+def test_email():
+    send_email()
+    return "E-mail de teste enviado com sucesso!"
