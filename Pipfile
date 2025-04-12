@@ -14,6 +14,9 @@ langchain = "*"
 langchain-community = "*"
 transformers = "*"
 requests = "*"
+flask-mail = "*"
+apscheduler = "*"
+flask-apscheduler = {git = "git+https://github.com/viniciuschiele/flask-apscheduler.git"}
 
 [dev-packages]
 
