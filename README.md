@@ -111,13 +111,20 @@ flask run
 ```arduino
 alura-challenge/
 ├── app/
-│   ├── models/
-│   ├── routes/
-│   └── services/
+│   ├── templates/
+│   │   ├── report.html
+│   │   ├── summary.html
+│   ├── classifier.py
+│   ├── e-mail.py
+│   ├── extensions.py
+│   ├── metrics.py
+│   ├── models.py
+│   └── routes.py
 ├── migrations/
 ├── run.py
 ├── Pipfile
 ├── .env.example
+├── config.py
 └── README.md
 ``` 
 
